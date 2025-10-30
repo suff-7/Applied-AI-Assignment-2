@@ -1,0 +1,6 @@
+test_author,paper_title,top_1_recommendation,top_1_score,true_author_in_top_10,true_author_rank
+Pinaki Chakraborty,doi:10 1016 j pnsc 2008 01 001,Vivek Sharma,0.3239225956493703,True,4.0
+Devendra K Tayal,a comprehensive study: - sarcasm detection in sentimental analysis,Satya Komaragiri,0.43596458429028534,False,
+Rama Murthy Garimella,towards faster spectrum sensing techniques in cognitive radio architectures,Srikanth Munjuluri,0.9847718165268682,True,2.0
+Nishchal K. Verma,untitled,Saurabh Barjatiya,0.5469720100959532,False,
+Sowmini Devi,a hinge-loss based codebook transfer for cross-domain recommendation,Vikas Kumar,0.9797288840973264,True,2.0

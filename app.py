@@ -15,14 +15,45 @@ st.set_page_config(
 @st.cache_resource
 def load_models():
     """Load TF-IDF model and author data"""
-    with open('tfidf_model.pkl', 'rb') as f:
-        tfidf_vectorizer = pickle.load(f)
-    with open('author_tfidf_vectors.pkl', 'rb') as f:
-        author_vectors = pickle.load(f)
-    with open('author_list.pkl', 'rb') as f:
-        author_names = pickle.load(f)
-    df_papers = pd.read_csv('author_papers.csv')
-    return tfidf_vectorizer, author_vectors, author_names, df_papers
+    import os
+    
+    # Check if model files exist
+    required_files = [
+        'tfidf_model.pkl', 
+        'author_tfidf_vectors.pkl', 
+        'author_list.pkl', 
+        'author_papers.csv'
+    ]
+    
+    missing_files = [f for f in required_files if not os.path.exists(f)]
+    
+    if missing_files:
+        st.error("🚨 **Model files not found!**")
+        st.write("**Missing files:**", missing_files)
+        st.write("""
+        **To use this system:**
+        1. Run the complete pipeline locally:
+           ```bash
+           python index_papers.py
+           python extract_text_and_profiles.py  
+           python build_tfidf_baseline.py
+           ```
+        2. Or upload your dataset and the system will build models automatically
+        """)
+        return None, None, None, None
+    
+    try:
+        with open('tfidf_model.pkl', 'rb') as f:
+            tfidf_vectorizer = pickle.load(f)
+        with open('author_tfidf_vectors.pkl', 'rb') as f:
+            author_vectors = pickle.load(f)
+        with open('author_list.pkl', 'rb') as f:
+            author_names = pickle.load(f)
+        df_papers = pd.read_csv('author_papers.csv')
+        return tfidf_vectorizer, author_vectors, author_names, df_papers
+    except Exception as e:
+        st.error(f"Error loading models: {e}")
+        return None, None, None, None
 
 # === TEXT PROCESSING ===
 def clean_text(text: str) -> str:
@@ -151,10 +182,27 @@ def main():
     st.markdown("**AI-Powered Reviewer Matching using TF-IDF & Cosine Similarity**")
     st.markdown("---")
     
-    try:
-        tfidf_vectorizer, author_vectors, author_names, df_papers = load_models()
-    except Exception as e:
-        st.error(f"Error loading models: {e}")
+    # Load models
+    tfidf_vectorizer, author_vectors, author_names, df_papers = load_models()
+    
+    # If models aren't loaded, show setup instructions
+    if tfidf_vectorizer is None:
+        st.info("🔧 **System Setup Required**")
+        st.markdown("""
+        This system requires trained models to make recommendations. 
+        
+        **For local deployment:**
+        1. Add your research paper dataset to the `Dataset/` folder
+        2. Run the pipeline:
+           ```bash
+           python index_papers.py
+           python extract_text_and_profiles.py  
+           python build_tfidf_baseline.py
+           streamlit run app.py
+           ```
+        
+        **For demo purposes:** The system needs pre-trained models from the research dataset.
+        """)
         st.stop()
     
     st.sidebar.header("⚙️ Settings")
