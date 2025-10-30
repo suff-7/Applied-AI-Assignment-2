@@ -65,29 +65,5 @@ Access the web interface at: http://localhost:8501
 - `build_tfidf_baseline.py` - TF-IDF model training
 - `app.py` - Streamlit web application
 
-## 🌐 Deployment Options
 
-### Option 1: Streamlit Cloud (Recommended)
-1. Fork this repository
-2. Go to [Streamlit Cloud](https://share.streamlit.io/)
-3. Deploy directly from GitHub
-4. Add your `GROQ_API_KEY` in app secrets
-
-### Option 2: Render
-1. Connect your GitHub repository
-2. Choose "Web Service"
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `streamlit run app.py --server.port $PORT --server.address 0.0.0.0`
-
-### Option 3: Docker
-```bash
-docker build -t reviewer-recommender .
-docker run -p 8501:8501 reviewer-recommender
-```
-
-### Option 4: Railway/Heroku
-- Use the included `setup.sh` script
-- Set environment variables as needed
-
-**Note:** For full functionality, you need to run the data pipeline first to generate model files.
 
