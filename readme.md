@@ -4,7 +4,8 @@
 ### Hamza Babukhan-SE22UARI208
 ### Aryan Pawar-SE22UARI195
 
-
+## Streamlit link
+### https://applied-ai-assignment-2-zfwhl69pzr9hvqfeoi45yf.streamlit.app/
 # 📄 Research Paper Reviewer Recommendation System
 
 ## Overview
