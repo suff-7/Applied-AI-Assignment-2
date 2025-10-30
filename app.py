@@ -32,11 +32,6 @@ def load_models():
     """Load TF-IDF model and author data"""
     import os
     
-    # Debug: Show current working directory and files
-    st.write("🔍 **Debug Info:**")
-    st.write(f"Current directory: {os.getcwd()}")
-    st.write(f"Files in directory: {os.listdir('.')}")
-    
     # Check if model files exist
     required_files = [
         'tfidf_model.pkl', 
@@ -47,12 +42,8 @@ def load_models():
     
     missing_files = []
     for f in required_files:
-        if os.path.exists(f):
-            size = os.path.getsize(f)
-            st.write(f"✅ {f} ({size:,} bytes)")
-        else:
+        if not os.path.exists(f):
             missing_files.append(f)
-            st.write(f"❌ {f} - Missing")
     
     if missing_files:
         st.error("🚨 **Model files not found!**")
