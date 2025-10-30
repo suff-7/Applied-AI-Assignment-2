@@ -4,7 +4,22 @@ import re
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-import fitz  
+import fitz
+try:
+    from demo_data import DEMO_RECOMMENDATIONS
+except ImportError:
+    DEMO_RECOMMENDATIONS = [
+        {"author": "Dr. John Smith", "score": 0.89, "expertise": "Machine Learning, Neural Networks"},
+        {"author": "Prof. Sarah Johnson", "score": 0.85, "expertise": "Computer Vision, Deep Learning"},
+        {"author": "Dr. Michael Brown", "score": 0.82, "expertise": "Natural Language Processing"},
+        {"author": "Dr. Emily Davis", "score": 0.79, "expertise": "Data Mining, Information Retrieval"},
+        {"author": "Prof. David Wilson", "score": 0.76, "expertise": "Artificial Intelligence, Robotics"},
+        {"author": "Dr. Lisa Anderson", "score": 0.73, "expertise": "Pattern Recognition, Image Processing"},
+        {"author": "Dr. James Miller", "score": 0.71, "expertise": "Cybersecurity, Network Security"},
+        {"author": "Prof. Maria Garcia", "score": 0.68, "expertise": "Bioinformatics, Computational Biology"},
+        {"author": "Dr. Robert Taylor", "score": 0.65, "expertise": "Software Engineering, Systems Design"},
+        {"author": "Dr. Jennifer Martinez", "score": 0.62, "expertise": "Human-Computer Interaction, UI/UX"}
+    ]  
 st.set_page_config(
     page_title="Reviewer Recommender System",
     page_icon="📄",
@@ -17,6 +32,11 @@ def load_models():
     """Load TF-IDF model and author data"""
     import os
     
+    # Debug: Show current working directory and files
+    st.write("🔍 **Debug Info:**")
+    st.write(f"Current directory: {os.getcwd()}")
+    st.write(f"Files in directory: {os.listdir('.')}")
+    
     # Check if model files exist
     required_files = [
         'tfidf_model.pkl', 
@@ -25,20 +45,41 @@ def load_models():
         'author_papers.csv'
     ]
     
-    missing_files = [f for f in required_files if not os.path.exists(f)]
+    missing_files = []
+    for f in required_files:
+        if os.path.exists(f):
+            size = os.path.getsize(f)
+            st.write(f"✅ {f} ({size:,} bytes)")
+        else:
+            missing_files.append(f)
+            st.write(f"❌ {f} - Missing")
     
     if missing_files:
         st.error("🚨 **Model files not found!**")
         st.write("**Missing files:**", missing_files)
-        st.write("""
-        **To use this system:**
-        1. Run the complete pipeline locally:
-           ```bash
-           python index_papers.py
-           python extract_text_and_profiles.py  
-           python build_tfidf_baseline.py
-           ```
-        2. Or upload your dataset and the system will build models automatically
+        
+        if st.button("🔄 **Reboot App**", type="primary"):
+            st.cache_resource.clear()
+            st.rerun()
+        
+        st.markdown("---")
+        st.info("""
+        **Issue:** Model files are missing or too large for this deployment platform.
+        
+        **Solution - Run locally for full functionality:**
+        
+        ```bash
+        git clone https://github.com/suff-7/Applied-AI-Assignment-2.git
+        cd Applied-AI-Assignment-2
+        pip install -r requirements.txt
+        # Add your dataset to Dataset/ folder
+        python index_papers.py
+        python extract_text_and_profiles.py  
+        python build_tfidf_baseline.py
+        streamlit run app.py
+        ```
+        
+        This will give you the complete working system with all features.
         """)
         return None, None, None, None
     
